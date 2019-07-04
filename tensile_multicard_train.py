@@ -43,6 +43,9 @@ def mergeLogicFile(tensile_path):
     print("merge start...")
     merge_script = "python " + tensile_path + "/Tensile/Utilities/merge_rocblas_yaml_files.py"
     
+    print("all the logic files as below:")
+    print(logic_dir_list)
+
     if 0 == len(logic_dir_list):
         print("No file need to merge!")
         return
@@ -107,7 +110,7 @@ def Train(usrArgs):
     
     try:
         parse =  YamlParse(args.config_path, deviceList)
-    except ValueError, IOError:
+    except (ValueError, IOError):
         return
     else:
         multiRun(args.tensile_path, parse.split_config_path_list, deviceList)

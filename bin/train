@@ -1,12 +1,12 @@
 try:
-    from tensile_multicard_train import tensile_multicard_train
+    from Tensile_multiprocess_train import tensile_multicard_train
 except ImportError:
     import os.path
     import sys
     parentdir = os.path.normpath(os.path.join(os.path.dirname(os.path.realpath(__file__)), "..", ".."))
     sys.path.append(parentdir)
 
-    from tensile_multicard_train import tensile_multicard_train
+    from Tensile_multiprocess_train import tensile_multicard_train
 
 # script run from commandline
 if __name__ == "__main__":

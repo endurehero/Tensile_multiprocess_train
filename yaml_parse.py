@@ -1,7 +1,7 @@
 import re
 import os
 
-WORK_DIR = "./output"
+WORK_DIR = os.getcwd() + "/output"
 CONFIG_DIR = WORK_DIR + "/config"
 LOGIC_DIR  = WORK_DIR + "/logic"
 
@@ -66,17 +66,19 @@ class YamlParse:
 
         cur_start = data_start
         cur_line = data_start + single_part_lines - 1
-        while cur_line < data_end:
+        
+        while split_num > 1:
             self.data_start_list.append(cur_start)
             self.data_end_list.append(cur_line)
             
             cur_start = cur_line + 1
             cur_line = cur_start + single_part_lines - 1
-        
-        if cur_start <= data_end:
-            self.data_start_list.append(cur_start)
-            self.data_end_list.append(data_end)
+            
+            split_num -= 1
 
+        self.data_start_list.append(cur_start)
+        self.data_end_list.append(data_end)
+        
         if False == self.configCheck() or len(self.data_start_list) > len(deviceList):
             print("Invalid config file!")
             raise ValueError
@@ -96,13 +98,16 @@ class YamlParse:
                 # write pre_fix
                 for i in range(self.pre_start, self.pre_end + 1):
                     f.write(self.config_content[i])
+                    f.write("\n")
                 # write data
                 for i in range(self.data_start_list[idx], self.data_end_list[idx] + 1):
                     f.write(self.config_content[i])
+                    f.write("\n")
                 
                 # write post_fix
                 for i in range(self.post_start, self.post_end + 1):
                     f.write(self.config_content[i])
+                    f.write("\n")
 
                 f.close()
 
