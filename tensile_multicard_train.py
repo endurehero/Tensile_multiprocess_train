@@ -6,11 +6,12 @@ import multiprocessing
 from multiprocessing import Pool
 
 from .hardware_detector import HardwareDetector
-from .yaml_parse import YamlParse, WORK_DIR, CONFIG_DIR, LOGIC_DIR
+from .yaml_parse import YamlParse
+from .common import LOG_DIR, WORK_DIR, CONFIG_DIR, LOGIC_DIR, OUTPUT_DIR
+from .output_struct import DirStructBuilder
 
 
 deviceList = []
-LOG_DIR = WORK_DIR + "/LOG"
 logic_dir_list = []
 
 def run(command):
@@ -81,6 +82,7 @@ def mergeLogicFile(tensile_path):
 def Train(usrArgs):
     argParser = argparse.ArgumentParser()
     argParser.add_argument("config_path", help="config.yaml file path")
+    argParser.add_argument("output_path", help="output file path, default is folder output in the current folder.")
     argParser.add_argument("tensile_path", help="root path of tensile")
     argParser.add_argument("-g", "--gpu", type = int, dest='gpu', \
         help = "gpu idx which used, will use all the valid gpu default", \
@@ -100,12 +102,17 @@ def Train(usrArgs):
 
     print("%s gpu will be used. devices list : %s" % (len(deviceList), deviceList))
     
+    if args.output_path != "":
+        OUTPUT_DIR = args.output_path
+    
     if os.path.exists(WORK_DIR):
         shutil.rmtree(WORK_DIR)
     os.mkdir(WORK_DIR)
     os.mkdir(CONFIG_DIR)
     os.mkdir(LOG_DIR)
     os.mkdir(LOGIC_DIR)
+
+    
     
     try:
         parse =  YamlParse(args.config_path, deviceList)
@@ -114,6 +121,7 @@ def Train(usrArgs):
     else:
         multiRun(args.tensile_path, parse.split_config_path_list, deviceList)
         mergeLogicFile(args.tensile_path)
+        DirStructBuilder()
         
     
 

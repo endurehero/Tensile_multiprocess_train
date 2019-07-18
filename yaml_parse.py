@@ -1,9 +1,7 @@
 import re
 import os
 
-WORK_DIR = os.getcwd() + "/tmp"
-CONFIG_DIR = WORK_DIR + "/config"
-LOGIC_DIR  = WORK_DIR + "/logic"
+from .common import WORK_DIR, CONFIG_DIR, LOGIC_DIR
 
 class YamlParse:
     def __init__(self, config_file, deviceList):
