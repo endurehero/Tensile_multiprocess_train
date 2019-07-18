@@ -90,10 +90,9 @@ def Train(usrArgs):
     
     hardware = HardwareDetector()
     
-    if args.gpu:
-        deviceList = list(set(hardware.gpu).intersection(set(args.gpu)))
-    else:
-        deviceList = hardware.gpu
+    if not args.gpu:
+        args.gpu = [0]
+    deviceList = list(set(hardware.gpu).intersection(set(args.gpu)))
 
     if 0 == len(deviceList):
         print("No GPU available or you choose the invalid gpu!")

@@ -1,7 +1,7 @@
 import re
 import os
 
-WORK_DIR = os.getcwd() + "/output"
+WORK_DIR = os.getcwd() + "/tmp"
 CONFIG_DIR = WORK_DIR + "/config"
 LOGIC_DIR  = WORK_DIR + "/logic"
 
