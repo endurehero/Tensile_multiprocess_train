@@ -7,7 +7,7 @@ from multiprocessing import Pool
 
 from .hardware_detector import HardwareDetector
 from .yaml_parse import YamlParse
-from .common import LOG_DIR, WORK_DIR, CONFIG_DIR, LOGIC_DIR, OUTPUT_DIR
+from .common import LOG_DIR, WORK_DIR, CONFIG_DIR, LOGIC_DIR, OUTPUT_DIR, printExit, printWarning
 from .output_struct import DirStructBuilder
 
 
@@ -50,9 +50,7 @@ def mergeLogicFile(tensile_path):
     if 0 == len(logic_dir_list):
         print("No file need to merge!")
         return
-
     final_dir = LOGIC_DIR + "/final"
-    
     os.mkdir(final_dir)
     
     if 1 == len(logic_dir_list):
@@ -104,22 +102,32 @@ def Train(usrArgs):
     
     if args.output_path != "":
         OUTPUT_DIR = args.output_path
+
+
+
+    # if just use 1 gpu, the process will follow the default flows:
+    if 1 == len(deviceList):
+        tensile_path = args.tensile_path + "/Tensile/bin/Tensile"
+        command = "HIP_VISIBLE_DEVICES={} python {} {} {}".format(deviceList[0], tensile_path, args.config_path, OUTPUT_DIR)
+        print(command)
+        os.system(command)
+        return
     
+
+    # multia process start...
     if os.path.exists(WORK_DIR):
         shutil.rmtree(WORK_DIR)
     os.mkdir(WORK_DIR)
     os.mkdir(CONFIG_DIR)
     os.mkdir(LOG_DIR)
     os.mkdir(LOGIC_DIR)
-
-    
     
     try:
         parse =  YamlParse(args.config_path, deviceList)
     except (ValueError, IOError):
-        return
+        printExit("[Train] yaml parse failed!")
     else:
-        multiRun(args.tensile_path, parse.split_config_path_list, deviceList)
+        multiRun(args.tensile_path, parse.run(), deviceList)
         mergeLogicFile(args.tensile_path)
         DirStructBuilder()
         
@@ -130,5 +138,4 @@ def main():
 
 
 if __name__ == "__main__":
-    print("This is can no longer be run as script. Run 'tensile_multicard_train/bin/train' instead.")
-    exit(1)
+    printExit("This is can no longer be run as script. Run 'tensile_multicard_train/bin/train' instead.")

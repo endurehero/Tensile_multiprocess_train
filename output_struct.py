@@ -142,15 +142,16 @@ class DirBuildTensileStyle(DirBuildStrategyBase):
         for root,dirs,files in os.walk(LOGIC_DIR):
             if root == LOGIC_DIR:
                 for dir in dirs:
-                    dst_folder = os.path.join(folder, dir)
-                    os.mkdir(dst_folder)
-                    src_folder = os.path.join(root, dir)
-                    if re.match(GPU_FOLDER_PATTERN, dir):
-                        src_folder = os.path.join(root, dir, self._3_folder)
+                    if re.match(GPU_FOLDER_PATTERN, dir) or dir == "final":
+                        dst_folder = os.path.join(folder, dir)
+                        os.mkdir(dst_folder)
+                        src_folder = os.path.join(root, dir)
+                        if re.match(GPU_FOLDER_PATTERN, dir):
+                            src_folder = os.path.join(root, dir, self._3_folder)
                     
-                    command = "cp -r {}/. {}".format(src_folder, dst_folder)
-                    print(command)
-                    os.system(command)
+                        command = "cp -r {}/. {}".format(src_folder, dst_folder)
+                        print(command)
+                        os.system(command)
 
         print("3_LibraryLogic build completed.")
         print("*******************************************")
