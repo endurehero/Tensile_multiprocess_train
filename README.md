@@ -7,7 +7,7 @@ Usages:
 
 cd ～/Tenslie_multiporcess_train  #enter the root folder  
 scl enable devtoolset-7 bash  
-python ./bin/train config_path tensile_path [gpu]    
+python ./bin/train config_path output_path tensile_path [gpu]    
 ~ config_path  : required, specify the input yaml file.  
 ~ output_path  : required, sepcify the output folder.  
 ~ tensile_path : required, specify the root folder of tensile.    
@@ -26,5 +26,3 @@ after training, you will find "output" folder in the workdir, and it's tree stru
     4_LibraryClient        #as folder name  
     5_SplitTrainingLog     #Tensile log for every gpu  
 
-
-so, you can find the result in the folder "output/logic/final/"
